@@ -1,0 +1,11 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
+#define TAM_BLOCO 40
+#define LINHAS 15
+#define COLUNAS 20
+#define ALTURA_HUD 40
+#define LARGURA_TELA (COLUNAS * TAM_BLOCO)
+#define ALTURA_TELA (LINHAS * TAM_BLOCO + ALTURA_HUD)
+
+#endif
