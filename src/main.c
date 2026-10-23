@@ -16,6 +16,7 @@ int main(void)
     CarregarMenu();
     CarregarTexturasFase();
     CarregarTexturasJogador();
+    CarregarTexturasObstaculo();
 
     while (!WindowShouldClose()) {
         if (!jogando && IsKeyPressed(KEY_ENTER)) {
@@ -37,6 +38,8 @@ int main(void)
         EndDrawing();
     }
 
+    FinalizarJogo(&jogo);
+    DescarregarTexturasObstaculo();
     DescarregarTexturasJogador();
     DescarregarTexturasFase();
     DescarregarMenu();
