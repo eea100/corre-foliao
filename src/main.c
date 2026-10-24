@@ -22,6 +22,8 @@ int main(void)
         if (!jogando && IsKeyPressed(KEY_ENTER)) {
             IniciarJogo(&jogo);
             jogando = true;
+        } else if (jogando && jogo.fim && IsKeyPressed(KEY_ENTER)) {
+            jogando = false;
         } else if (jogando) {
             AtualizarJogo(&jogo);
         }

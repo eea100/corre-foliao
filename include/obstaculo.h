@@ -25,5 +25,6 @@ void AdicionarObstaculo(Obstaculo **lista, Obstaculo *novo);
 void LiberarObstaculos(Obstaculo **lista);
 void MoverObstaculos(Obstaculo *lista);
 void DesenharObstaculos(Obstaculo *lista);
+bool BateuEmObstaculo(Obstaculo *lista, Rectangle area);
 
 #endif

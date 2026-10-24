@@ -101,3 +101,14 @@ void DesenharObstaculos(Obstaculo *lista)
         }
     }
 }
+
+bool BateuEmObstaculo(Obstaculo *lista, Rectangle area)
+{
+    for (Obstaculo *o = lista; o != NULL; o = o->proximo) {
+        if (CheckCollisionRecs(o->corpo, area)) {
+            return true;
+        }
+    }
+
+    return false;
+}
