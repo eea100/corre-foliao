@@ -1,9 +1,10 @@
 #include "jogo.h"
 #include "fase.h"
 
-static float Velocidade(int fase, int linha)
+static float Velocidade(TipoObstaculo tipo, int fase, int linha)
 {
-    float velocidade = 110 + 30 * fase;
+    float base = tipo == CARRO ? 110 : tipo == TRIO ? 70 : 50;
+    float velocidade = base + 30 * fase;
     return linha % 2 == 0 ? velocidade : -velocidade;
 }
 
@@ -13,9 +14,15 @@ static void CarregarFase(Jogo *jogo)
 
     for (int linha = 0; linha < LINHAS; linha++) {
         for (int coluna = 0; coluna < COLUNAS; coluna++) {
-            if (CaractereDaFase(jogo->fase, linha, coluna) == 'c') {
-                AdicionarObstaculo(&jogo->obstaculos, CriarObstaculo(CARRO, linha, coluna, Velocidade(jogo->fase, linha)));
-            }
+            char c = CaractereDaFase(jogo->fase, linha, coluna);
+            TipoObstaculo tipo;
+
+            if (c == 'c') tipo = CARRO;
+            else if (c == 't') tipo = TRIO;
+            else if (c == 'g') tipo = BONECO;
+            else continue;
+
+            AdicionarObstaculo(&jogo->obstaculos, CriarObstaculo(tipo, linha, coluna, Velocidade(tipo, jogo->fase, linha)));
         }
     }
 

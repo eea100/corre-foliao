@@ -5,7 +5,9 @@
 #include "raylib.h"
 
 typedef enum {
-    CARRO
+    CARRO,
+    TRIO,
+    BONECO
 } TipoObstaculo;
 
 typedef struct Obstaculo {
