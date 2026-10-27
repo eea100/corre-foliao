@@ -7,7 +7,7 @@
 #define ALTURA_HUD 40
 #define LARGURA_TELA (COLUNAS * TAM_BLOCO)
 #define ALTURA_TELA (LINHAS * TAM_BLOCO + ALTURA_HUD)
-#define TOTAL_FASES 1
+#define TOTAL_FASES 4
 #define VIDAS_INICIAIS 3
 
 #endif

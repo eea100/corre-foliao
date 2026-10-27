@@ -11,7 +11,10 @@ typedef struct {
     Obstaculo *obstaculos;
     int fase;
     int vidas;
+    int pontos;
+    int melhorLinha;
     bool fim;
+    bool venceu;
 } Jogo;
 
 void IniciarJogo(Jogo *jogo);

@@ -29,6 +29,7 @@ static void CarregarFase(Jogo *jogo)
     }
 
     IniciarJogador(&jogo->jogador);
+    jogo->melhorLinha = LINHAS - 1;
 }
 
 void IniciarJogo(Jogo *jogo)
@@ -39,7 +40,9 @@ void IniciarJogo(Jogo *jogo)
 
     jogo->fase = 0;
     jogo->vidas = VIDAS_INICIAIS;
+    jogo->pontos = 0;
     jogo->fim = false;
+    jogo->venceu = false;
     CarregarFase(jogo);
 }
 
@@ -47,6 +50,12 @@ void FinalizarJogo(Jogo *jogo)
 {
     LiberarObstaculos(&jogo->obstaculos);
     UnloadTexture(coracao);
+}
+
+static void TerminarJogo(Jogo *jogo, bool venceu)
+{
+    jogo->fim = true;
+    jogo->venceu = venceu;
 }
 
 void AtualizarJogo(Jogo *jogo)
@@ -60,13 +69,28 @@ void AtualizarJogo(Jogo *jogo)
     MoverJogador(jogador, jogo->fase);
     MoverObstaculos(jogo->obstaculos);
 
+    if (jogador->linha < jogo->melhorLinha) {
+        jogo->pontos += 10;
+        jogo->melhorLinha = jogador->linha;
+    }
+
     if (BateuEmObstaculo(jogo->obstaculos, CorpoJogador(*jogador))) {
         jogo->vidas--;
 
         if (jogo->vidas == 0) {
-            jogo->fim = true;
+            TerminarJogo(jogo, false);
         } else {
             IniciarJogador(jogador);
+        }
+    } else if (jogador->linha == 0) {
+        jogo->pontos += 100;
+        jogo->fase++;
+
+        if (jogo->fase == TOTAL_FASES) {
+            jogo->fase = TOTAL_FASES - 1;
+            TerminarJogo(jogo, true);
+        } else {
+            CarregarFase(jogo);
         }
     }
 }
@@ -80,6 +104,7 @@ static void DesenharHUD(Jogo *jogo)
 {
     DrawRectangle(0, 0, LARGURA_TELA, ALTURA_HUD, (Color){42, 18, 64, 255});
     DrawText(TextFormat("Fase %d/%d", jogo->fase + 1, TOTAL_FASES), 12, 10, 20, GOLD);
+    DrawText(TextFormat("Pontos: %d", jogo->pontos), 160, 10, 20, RAYWHITE);
 
     for (int i = 0; i < jogo->vidas; i++) {
         DrawTexturePro(coracao, (Rectangle){0, 0, coracao.width, coracao.height},
@@ -87,12 +112,13 @@ static void DesenharHUD(Jogo *jogo)
     }
 }
 
-static void DesenharFim(void)
+static void DesenharFim(Jogo *jogo)
 {
     DrawRectangle(0, 0, LARGURA_TELA, ALTURA_TELA, Fade(BLACK, 0.6f));
-    DrawRectangle(220, 240, 360, 160, RAYWHITE);
-    TextoCentro("FIM DE JOGO", 270, 32, RED);
-    TextoCentro("ENTER para voltar", 340, 20, DARKGRAY);
+    DrawRectangle(220, 220, 360, 200, RAYWHITE);
+    TextoCentro(jogo->venceu ? "CHEGOU NO BLOCO!" : "FIM DE JOGO", 245, 32, jogo->venceu ? GOLD : RED);
+    TextoCentro(TextFormat("Pontos: %d", jogo->pontos), 305, 24, DARKBLUE);
+    TextoCentro("ENTER para voltar", 370, 20, DARKGRAY);
 }
 
 void DesenharJogo(Jogo *jogo)
@@ -108,6 +134,6 @@ void DesenharJogo(Jogo *jogo)
     DesenharHUD(jogo);
 
     if (jogo->fim) {
-        DesenharFim();
+        DesenharFim(jogo);
     }
 }
