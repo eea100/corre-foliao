@@ -13,6 +13,7 @@ typedef struct {
     int vidas;
     int pontos;
     int melhorLinha;
+    int recordes[TOTAL_RECORDES];
     bool fim;
     bool venceu;
 } Jogo;

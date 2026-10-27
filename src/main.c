@@ -3,6 +3,7 @@
 #include "fase.h"
 #include "menu.h"
 #include "jogo.h"
+#include "recordes.h"
 
 int main(void)
 {
@@ -17,6 +18,7 @@ int main(void)
     CarregarTexturasFase();
     CarregarTexturasJogador();
     CarregarTexturasObstaculo();
+    CarregarRecordes(jogo.recordes);
 
     while (!WindowShouldClose()) {
         if (!jogando && IsKeyPressed(KEY_ENTER)) {
@@ -34,7 +36,7 @@ int main(void)
         if (jogando) {
             DesenharJogo(&jogo);
         } else {
-            DesenharMenu();
+            DesenharMenu(jogo.recordes[0]);
         }
 
         EndDrawing();

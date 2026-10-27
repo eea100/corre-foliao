@@ -1,5 +1,6 @@
 #include "jogo.h"
 #include "fase.h"
+#include "recordes.h"
 
 static Texture2D coracao;
 
@@ -38,6 +39,7 @@ void IniciarJogo(Jogo *jogo)
         coracao = LoadTexture("assets/cenario/coracao.png");
     }
 
+    CarregarRecordes(jogo->recordes);
     jogo->fase = 0;
     jogo->vidas = VIDAS_INICIAIS;
     jogo->pontos = 0;
@@ -56,6 +58,10 @@ static void TerminarJogo(Jogo *jogo, bool venceu)
 {
     jogo->fim = true;
     jogo->venceu = venceu;
+
+    if (InserirRecorde(jogo->recordes, jogo->pontos)) {
+        SalvarRecordes(jogo->recordes);
+    }
 }
 
 void AtualizarJogo(Jogo *jogo)
@@ -105,6 +111,7 @@ static void DesenharHUD(Jogo *jogo)
     DrawRectangle(0, 0, LARGURA_TELA, ALTURA_HUD, (Color){42, 18, 64, 255});
     DrawText(TextFormat("Fase %d/%d", jogo->fase + 1, TOTAL_FASES), 12, 10, 20, GOLD);
     DrawText(TextFormat("Pontos: %d", jogo->pontos), 160, 10, 20, RAYWHITE);
+    DrawText(TextFormat("Recorde: %d", jogo->recordes[0]), 340, 10, 20, RAYWHITE);
 
     for (int i = 0; i < jogo->vidas; i++) {
         DrawTexturePro(coracao, (Rectangle){0, 0, coracao.width, coracao.height},
@@ -115,10 +122,16 @@ static void DesenharHUD(Jogo *jogo)
 static void DesenharFim(Jogo *jogo)
 {
     DrawRectangle(0, 0, LARGURA_TELA, ALTURA_TELA, Fade(BLACK, 0.6f));
-    DrawRectangle(220, 220, 360, 200, RAYWHITE);
-    TextoCentro(jogo->venceu ? "CHEGOU NO BLOCO!" : "FIM DE JOGO", 245, 32, jogo->venceu ? GOLD : RED);
-    TextoCentro(TextFormat("Pontos: %d", jogo->pontos), 305, 24, DARKBLUE);
-    TextoCentro("ENTER para voltar", 370, 20, DARKGRAY);
+    DrawRectangle(220, 140, 360, 360, RAYWHITE);
+    TextoCentro(jogo->venceu ? "CHEGOU NO BLOCO!" : "FIM DE JOGO", 160, 32, jogo->venceu ? GOLD : RED);
+    TextoCentro(TextFormat("Pontos: %d", jogo->pontos), 210, 24, DARKBLUE);
+    TextoCentro("TOP 5", 255, 22, DARKGRAY);
+
+    for (int i = 0; i < TOTAL_RECORDES; i++) {
+        TextoCentro(TextFormat("%d. %d", i + 1, jogo->recordes[i]), 285 + i * 28, 22, DARKBLUE);
+    }
+
+    TextoCentro("ENTER para voltar", 450, 20, DARKGRAY);
 }
 
 void DesenharJogo(Jogo *jogo)

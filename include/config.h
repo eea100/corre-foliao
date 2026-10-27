@@ -9,5 +9,6 @@
 #define ALTURA_TELA (LINHAS * TAM_BLOCO + ALTURA_HUD)
 #define TOTAL_FASES 4
 #define VIDAS_INICIAIS 3
+#define TOTAL_RECORDES 5
 
 #endif
