@@ -7,7 +7,7 @@
 
 int main(void)
 {
-    Jogo jogo = {0};
+    struct Jogo jogo = {0};
     bool jogando = false;
 
     InitWindow(LARGURA_TELA, ALTURA_TELA, "Corre, Foliao!");

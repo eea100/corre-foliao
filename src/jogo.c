@@ -4,28 +4,28 @@
 
 static Texture2D coracao;
 
-static float Velocidade(TipoObstaculo tipo, int fase, int linha)
+static float Velocidade(enum TipoObstaculo tipo, int fase, int linha)
 {
     float base = tipo == CARRO ? 110 : tipo == TRIO ? 70 : 50;
     float velocidade = base + 30 * fase;
     return linha % 2 == 0 ? velocidade : -velocidade;
 }
 
-static void CarregarFase(Jogo *jogo)
+static void CarregarFase(struct Jogo *jogo)
 {
-    LiberarObstaculos(&jogo->obstaculos);
+    LiberarLista(&jogo->head);
 
     for (int linha = 0; linha < LINHAS; linha++) {
         for (int coluna = 0; coluna < COLUNAS; coluna++) {
             char c = CaractereDaFase(jogo->fase, linha, coluna);
-            TipoObstaculo tipo;
+            enum TipoObstaculo tipo;
 
             if (c == 'c') tipo = CARRO;
             else if (c == 't') tipo = TRIO;
             else if (c == 'g') tipo = BONECO;
             else continue;
 
-            AdicionarObstaculo(&jogo->obstaculos, CriarObstaculo(tipo, linha, coluna, Velocidade(tipo, jogo->fase, linha)));
+            InserirNo(&jogo->head, CriarNo(tipo, linha, coluna, Velocidade(tipo, jogo->fase, linha)));
         }
     }
 
@@ -33,7 +33,7 @@ static void CarregarFase(Jogo *jogo)
     jogo->melhorLinha = LINHAS - 1;
 }
 
-void IniciarJogo(Jogo *jogo)
+void IniciarJogo(struct Jogo *jogo)
 {
     if (coracao.id == 0) {
         coracao = LoadTexture("assets/cenario/coracao.png");
@@ -48,13 +48,13 @@ void IniciarJogo(Jogo *jogo)
     CarregarFase(jogo);
 }
 
-void FinalizarJogo(Jogo *jogo)
+void FinalizarJogo(struct Jogo *jogo)
 {
-    LiberarObstaculos(&jogo->obstaculos);
+    LiberarLista(&jogo->head);
     UnloadTexture(coracao);
 }
 
-static void TerminarJogo(Jogo *jogo, bool venceu)
+static void TerminarJogo(struct Jogo *jogo, bool venceu)
 {
     jogo->fim = true;
     jogo->venceu = venceu;
@@ -64,23 +64,23 @@ static void TerminarJogo(Jogo *jogo, bool venceu)
     }
 }
 
-void AtualizarJogo(Jogo *jogo)
+void AtualizarJogo(struct Jogo *jogo)
 {
-    Jogador *jogador = &jogo->jogador;
+    struct Jogador *jogador = &jogo->jogador;
 
     if (jogo->fim) {
         return;
     }
 
     MoverJogador(jogador, jogo->fase);
-    MoverObstaculos(jogo->obstaculos);
+    MoverObstaculos(jogo->head);
 
     if (jogador->linha < jogo->melhorLinha) {
         jogo->pontos += 10;
         jogo->melhorLinha = jogador->linha;
     }
 
-    if (BateuEmObstaculo(jogo->obstaculos, CorpoJogador(*jogador))) {
+    if (BateuEmObstaculo(jogo->head, CorpoJogador(*jogador))) {
         jogo->vidas--;
 
         if (jogo->vidas == 0) {
@@ -106,7 +106,7 @@ static void TextoCentro(const char *texto, int y, int tamanho, Color cor)
     DrawText(texto, (LARGURA_TELA - MeasureText(texto, tamanho)) / 2, y, tamanho, cor);
 }
 
-static void DesenharHUD(Jogo *jogo)
+static void DesenharHUD(struct Jogo *jogo)
 {
     DrawRectangle(0, 0, LARGURA_TELA, ALTURA_HUD, (Color){42, 18, 64, 255});
     DrawText(TextFormat("Fase %d/%d", jogo->fase + 1, TOTAL_FASES), 12, 10, 20, GOLD);
@@ -119,7 +119,7 @@ static void DesenharHUD(Jogo *jogo)
     }
 }
 
-static void DesenharFim(Jogo *jogo)
+static void DesenharFim(struct Jogo *jogo)
 {
     DrawRectangle(0, 0, LARGURA_TELA, ALTURA_TELA, Fade(BLACK, 0.6f));
     DrawRectangle(220, 140, 360, 360, RAYWHITE);
@@ -134,13 +134,13 @@ static void DesenharFim(Jogo *jogo)
     TextoCentro("ENTER para voltar", 450, 20, DARKGRAY);
 }
 
-void DesenharJogo(Jogo *jogo)
+void DesenharJogo(struct Jogo *jogo)
 {
     Camera2D camera = {.offset = {0, ALTURA_HUD}, .zoom = 1};
 
     BeginMode2D(camera);
     DesenharFase(jogo->fase);
-    DesenharObstaculos(jogo->obstaculos);
+    DesenharObstaculos(jogo->head);
     DesenharJogador(jogo->jogador);
     EndMode2D();
 

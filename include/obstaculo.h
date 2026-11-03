@@ -4,27 +4,27 @@
 #include <stdbool.h>
 #include "raylib.h"
 
-typedef enum {
+enum TipoObstaculo {
     CARRO,
     TRIO,
     BONECO
-} TipoObstaculo;
+};
 
-typedef struct Obstaculo {
-    TipoObstaculo tipo;
+struct Node {
+    enum TipoObstaculo tipo;
     Rectangle corpo;
     float velocidade;
     int cor;
-    struct Obstaculo *proximo;
-} Obstaculo;
+    struct Node *next;
+};
 
 void CarregarTexturasObstaculo(void);
 void DescarregarTexturasObstaculo(void);
-Obstaculo *CriarObstaculo(TipoObstaculo tipo, int linha, int coluna, float velocidade);
-void AdicionarObstaculo(Obstaculo **lista, Obstaculo *novo);
-void LiberarObstaculos(Obstaculo **lista);
-void MoverObstaculos(Obstaculo *lista);
-void DesenharObstaculos(Obstaculo *lista);
-bool BateuEmObstaculo(Obstaculo *lista, Rectangle area);
+struct Node *CriarNo(enum TipoObstaculo tipo, int linha, int coluna, float velocidade);
+void InserirNo(struct Node **head, struct Node *novo);
+void LiberarLista(struct Node **head);
+void MoverObstaculos(struct Node *head);
+void DesenharObstaculos(struct Node *head);
+bool BateuEmObstaculo(struct Node *head, Rectangle area);
 
 #endif

@@ -32,9 +32,9 @@ void DescarregarTexturasObstaculo(void)
     }
 }
 
-Obstaculo *CriarObstaculo(TipoObstaculo tipo, int linha, int coluna, float velocidade)
+struct Node *CriarNo(enum TipoObstaculo tipo, int linha, int coluna, float velocidade)
 {
-    Obstaculo *novo = malloc(sizeof(Obstaculo));
+    struct Node *novo = malloc(sizeof(struct Node));
 
     if (novo == NULL) {
         return NULL;
@@ -44,36 +44,36 @@ Obstaculo *CriarObstaculo(TipoObstaculo tipo, int linha, int coluna, float veloc
     novo->corpo = (Rectangle){coluna * TAM_BLOCO, linha * TAM_BLOCO + 6, larguras[tipo], TAM_BLOCO - 12};
     novo->velocidade = velocidade;
     novo->cor = (linha + coluna) % 4;
-    novo->proximo = NULL;
+    novo->next = NULL;
     return novo;
 }
 
-void AdicionarObstaculo(Obstaculo **lista, Obstaculo *novo)
+void InserirNo(struct Node **head, struct Node *novo)
 {
     if (novo != NULL) {
-        novo->proximo = *lista;
-        *lista = novo;
+        novo->next = *head;
+        *head = novo;
     }
 }
 
-void LiberarObstaculos(Obstaculo **lista)
+void LiberarLista(struct Node **head)
 {
-    while (*lista != NULL) {
-        Obstaculo *proximo = (*lista)->proximo;
-        free(*lista);
-        *lista = proximo;
+    while (*head != NULL) {
+        struct Node *temp = *head;
+        *head = (*head)->next;
+        free(temp);
     }
 }
 
-void MoverObstaculos(Obstaculo *lista)
+void MoverObstaculos(struct Node *head)
 {
-    for (Obstaculo *o = lista; o != NULL; o = o->proximo) {
-        o->corpo.x += o->velocidade * GetFrameTime();
+    for (struct Node *node = head; node != NULL; node = node->next) {
+        node->corpo.x += node->velocidade * GetFrameTime();
 
-        if (o->corpo.x > LARGURA_TELA) {
-            o->corpo.x = -o->corpo.width;
-        } else if (o->corpo.x < -o->corpo.width) {
-            o->corpo.x = LARGURA_TELA;
+        if (node->corpo.x > LARGURA_TELA) {
+            node->corpo.x = -node->corpo.width;
+        } else if (node->corpo.x < -node->corpo.width) {
+            node->corpo.x = LARGURA_TELA;
         }
     }
 }
@@ -84,28 +84,28 @@ static void DesenharImagem(Texture2D textura, float x, float y, float largura, f
     DrawTexturePro(textura, origem, (Rectangle){x, y, largura, altura}, (Vector2){0, 0}, 0, WHITE);
 }
 
-void DesenharObstaculos(Obstaculo *lista)
+void DesenharObstaculos(struct Node *head)
 {
     int quadro = (int)(GetTime() * 8) % 4;
 
-    for (Obstaculo *o = lista; o != NULL; o = o->proximo) {
-        int lado = o->velocidade > 0 ? 1 : 0;
-        Rectangle c = o->corpo;
+    for (struct Node *node = head; node != NULL; node = node->next) {
+        int lado = node->velocidade > 0 ? 1 : 0;
+        Rectangle c = node->corpo;
 
-        if (o->tipo == CARRO) {
-            DesenharImagem(carros[o->cor][lado], c.x, c.y - 6, c.width, c.height + 8);
-        } else if (o->tipo == TRIO) {
-            DesenharImagem(trios[o->cor][lado], c.x, c.y - 10, c.width, c.height + 12);
+        if (node->tipo == CARRO) {
+            DesenharImagem(carros[node->cor][lado], c.x, c.y - 6, c.width, c.height + 8);
+        } else if (node->tipo == TRIO) {
+            DesenharImagem(trios[node->cor][lado], c.x, c.y - 10, c.width, c.height + 12);
         } else {
             DesenharImagem(bonecos[lado][quadro], c.x - 8, c.y - 34, 46, 62);
         }
     }
 }
 
-bool BateuEmObstaculo(Obstaculo *lista, Rectangle area)
+bool BateuEmObstaculo(struct Node *head, Rectangle area)
 {
-    for (Obstaculo *o = lista; o != NULL; o = o->proximo) {
-        if (CheckCollisionRecs(o->corpo, area)) {
+    for (struct Node *node = head; node != NULL; node = node->next) {
+        if (CheckCollisionRecs(node->corpo, area)) {
             return true;
         }
     }

@@ -3,25 +3,25 @@
 
 #include "raylib.h"
 
-typedef enum {
+enum Direcao {
     FRENTE,
     COSTAS,
     ESQUERDA,
     DIREITA
-} Direcao;
+};
 
-typedef struct {
+struct Jogador {
     int linha;
     int coluna;
-    Direcao direcao;
+    enum Direcao direcao;
     double ultimoPasso;
-} Jogador;
+};
 
 void CarregarTexturasJogador(void);
 void DescarregarTexturasJogador(void);
-void IniciarJogador(Jogador *jogador);
-void MoverJogador(Jogador *jogador, int fase);
-Rectangle CorpoJogador(Jogador jogador);
-void DesenharJogador(Jogador jogador);
+void IniciarJogador(struct Jogador *jogador);
+void MoverJogador(struct Jogador *jogador, int fase);
+Rectangle CorpoJogador(struct Jogador jogador);
+void DesenharJogador(struct Jogador jogador);
 
 #endif

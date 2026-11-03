@@ -23,7 +23,7 @@ void DescarregarTexturasJogador(void)
     }
 }
 
-void IniciarJogador(Jogador *jogador)
+void IniciarJogador(struct Jogador *jogador)
 {
     jogador->linha = LINHAS - 1;
     jogador->coluna = COLUNAS / 2;
@@ -31,7 +31,7 @@ void IniciarJogador(Jogador *jogador)
     jogador->ultimoPasso = 0;
 }
 
-void MoverJogador(Jogador *jogador, int fase)
+void MoverJogador(struct Jogador *jogador, int fase)
 {
     int linha = jogador->linha;
     int coluna = jogador->coluna;
@@ -61,12 +61,12 @@ void MoverJogador(Jogador *jogador, int fase)
     jogador->ultimoPasso = GetTime();
 }
 
-Rectangle CorpoJogador(Jogador jogador)
+Rectangle CorpoJogador(struct Jogador jogador)
 {
     return (Rectangle){jogador.coluna * TAM_BLOCO + 8, jogador.linha * TAM_BLOCO + 8, TAM_BLOCO - 16, TAM_BLOCO - 16};
 }
 
-void DesenharJogador(Jogador jogador)
+void DesenharJogador(struct Jogador jogador)
 {
     int quadro = GetTime() - jogador.ultimoPasso < 0.15 ? 1 : 0;
     Texture2D sprite = sprites[jogador.direcao][quadro];

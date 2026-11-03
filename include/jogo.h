@@ -6,9 +6,9 @@
 #include "jogador.h"
 #include "obstaculo.h"
 
-typedef struct {
-    Jogador jogador;
-    Obstaculo *obstaculos;
+struct Jogo {
+    struct Jogador jogador;
+    struct Node *head;
     int fase;
     int vidas;
     int pontos;
@@ -16,11 +16,11 @@ typedef struct {
     int recordes[TOTAL_RECORDES];
     bool fim;
     bool venceu;
-} Jogo;
+};
 
-void IniciarJogo(Jogo *jogo);
-void AtualizarJogo(Jogo *jogo);
-void DesenharJogo(Jogo *jogo);
-void FinalizarJogo(Jogo *jogo);
+void IniciarJogo(struct Jogo *jogo);
+void AtualizarJogo(struct Jogo *jogo);
+void DesenharJogo(struct Jogo *jogo);
+void FinalizarJogo(struct Jogo *jogo);
 
 #endif
