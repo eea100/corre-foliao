@@ -32,6 +32,6 @@ void DesenharMenu(int recorde)
         TextoCentro("ENTER para jogar", 300, 30, GOLD);
     }
 
-    TextoCentro("Setas: andar   ESC: sair", 345, 20, RAYWHITE);
+    TextoCentro("Setas: andar   P: pausar   ESC: sair", 345, 20, RAYWHITE);
     TextoCentro(TextFormat("Recorde: %d", recorde), 375, 20, RAYWHITE);
 }

@@ -16,6 +16,7 @@ struct Jogo {
     int recordes[TOTAL_RECORDES];
     bool fim;
     bool venceu;
+    bool pausado;
 };
 
 void IniciarJogo(struct Jogo *jogo);

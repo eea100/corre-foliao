@@ -45,6 +45,7 @@ void IniciarJogo(struct Jogo *jogo)
     jogo->pontos = 0;
     jogo->fim = false;
     jogo->venceu = false;
+    jogo->pausado = false;
     CarregarFase(jogo);
 }
 
@@ -68,7 +69,11 @@ void AtualizarJogo(struct Jogo *jogo)
 {
     struct Jogador *jogador = &jogo->jogador;
 
-    if (jogo->fim) {
+    if (IsKeyPressed(KEY_P)) {
+        jogo->pausado = !jogo->pausado;
+    }
+
+    if (jogo->pausado || jogo->fim) {
         return;
     }
 
@@ -145,6 +150,10 @@ void DesenharJogo(struct Jogo *jogo)
     EndMode2D();
 
     DesenharHUD(jogo);
+
+    if (jogo->pausado) {
+        TextoCentro("PAUSADO", 300, 40, YELLOW);
+    }
 
     if (jogo->fim) {
         DesenharFim(jogo);

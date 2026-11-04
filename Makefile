@@ -30,4 +30,4 @@ run: all
 clean:
 	rm -f CorreFoliao CorreFoliao.exe
 
-.PHONY: all run cleanmake
+.PHONY: all run clean
