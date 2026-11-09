@@ -8,6 +8,12 @@ Casual game em C com Raylib ambientado no Carnaval de Olinda. Projeto da discipl
   <img src="docs/fim.png" width="32%">
 </p>
 
+## Vídeo
+
+[![Vídeo do jogo rodando](https://img.youtube.com/vi/9uHPenxZqtA/hqdefault.jpg)](https://youtu.be/9uHPenxZqtA)
+
+Assista no YouTube: https://youtu.be/9uHPenxZqtA
+
 ## O jogo
 
 O folião precisa atravessar quatro pontos do Carnaval de Olinda para chegar no bloco:
