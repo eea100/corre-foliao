@@ -40,18 +40,50 @@ Cada fase é uma tela com ruas e ladeiras. Carros e trios elétricos passam nas 
 
 ## Como compilar e rodar
 
-É preciso ter a [Raylib](https://www.raylib.com/) instalada.
+É preciso ter a [Raylib](https://www.raylib.com/) instalada. O projeto foi feito com a Raylib 5.5.
 
-**Windows** (Raylib instalada em `C:\raylib`):
+### Linux
+
+**1. Instalar a Raylib** (só na primeira vez)
+
+Ubuntu / Debian, instalar as dependências:
+
+```
+sudo apt install build-essential git libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev
+```
+
+Fedora, instalar as dependências:
+
+```
+sudo dnf install gcc make git alsa-lib-devel mesa-libGL-devel libX11-devel libXrandr-devel libXi-devel libXcursor-devel libXinerama-devel
+```
+
+Depois, em qualquer distribuição, compilar e instalar a Raylib:
+
+```
+git clone --depth 1 --branch 5.5 https://github.com/raysan5/raylib.git
+cd raylib/src
+make PLATFORM=PLATFORM_DESKTOP
+sudo make install
+```
+
+No Arch Linux basta `sudo pacman -S raylib`.
+
+**2. Baixar e rodar o jogo**
+
+```
+git clone https://github.com/eea100/corre-foliao.git
+cd corre-foliao
+make run
+```
+
+### Windows
+
+1. Instale a Raylib pelo instalador oficial (raylib.itch.io/raylib), na pasta padrão `C:\raylib`.
+2. Na pasta do projeto, rode:
 
 ```
 C:\raylib\w64devkit\bin\make.exe run
-```
-
-**Linux:**
-
-```
-make run
 ```
 
 ## Estrutura
